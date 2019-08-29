@@ -73,6 +73,9 @@ export default {
                 })
         },
 
+        /**
+        *This method uses api authentication via twitter
+        **/
         async loginWithTwitter()  {
             // loading is set to true while auth is loading
             this.loading = true
@@ -90,7 +93,8 @@ export default {
 
                     //once authenticated, redirect users to chat '/'  page.
                     this.$router.push('/')
-                    // firebase.auth().logOut()
+
+
 
                 })
                 .catch(error => {
