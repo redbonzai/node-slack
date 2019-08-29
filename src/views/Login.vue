@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col text-center">
-                    <button class="btn btn-outline-danger btn-lg">Login With Google</button>
+                    <button @click="loginWithGoogle" class="btn btn-outline-danger btn-lg">Login With Google</button>
                 </div>
             </div>
             <div class="row mt-3">
@@ -19,7 +19,17 @@
     </div>
 </template>
 <script>
+
+import auth from 'firebase/auth'
 export default {
-    name: 'login'
+    name: 'login',
+    methods: {
+        async loginWithGoogle() {
+            await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(response => {
+                // eslint-disable-next-line no-console
+                console.log(` Google authentication response: `, response)
+            })
+        }
+    }
 }
 </script>
