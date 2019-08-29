@@ -86,6 +86,8 @@ export default {
                     // dispatch setUser action
                     this.$store.dispatch('setUser', response.user)
 
+                    console.log('Current Environment: ', process.env.NODE_ENV)
+
                     //once authenticated, redirect users to chat '/'  page.
                     this.$router.push('/')
                     // firebase.auth().logOut()
