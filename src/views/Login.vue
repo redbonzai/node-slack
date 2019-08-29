@@ -4,6 +4,14 @@
              <h2 class="lead display-3">#SLACK EMULATOR#</h2> 
              <p>Realtime Communication</p>
         </div>
+
+        <!-- Show loading status -->
+        <div class="alert alert-info" v-if="loading">Processing ... </div>
+
+        <div class="alert alert-danger" v-if="hasErrors">
+            <div v-for="error in errors" v-bind:key="error">{{ error }}</div>
+        </div>
+
         <div class="container-fluid">
             <div class="row">
                 <div class="col text-center">
@@ -23,8 +31,29 @@
 import auth from 'firebase/auth'
 export default {
     name: 'login',
+
+    data() {
+        return {
+            errors: [],
+            loading: false
+        }
+    },
+
+    computed: {
+        hasErrors() {
+            return this.errors.length > 0
+        }
+    },
+
     methods: {
         async loginWithGoogle() {
+
+            // loading is set to true while auth is loading
+            this.loading = true
+
+            // clear out old errors when making a fresh request
+            this.errors = []
+
             await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
                 .then(response => {
                     // eslint-disable-next-line no-console
@@ -37,6 +66,12 @@ export default {
                     // firebase.auth().logOut()
 
             })
+                .catch(error => {
+                    this.errors.push(error.message)
+
+                    // if there is an error, then set loading = false
+                    this.loading = false
+                })
         }
     }
 }
