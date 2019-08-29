@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import firebase from 'firebase/app'
 import store from './store'
+import auth from 'firebase/auth'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -24,8 +25,17 @@ firebase.initializeApp(firebaseConfig)
 
 window.firebase = firebase
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+
+  // dispatch user if user is logged in.  Otherwise, user will be null
+  store.dispatch('setUser', user)
+
+  new Vue({
+    router,
+    store,
+    render: h => h(App)
+  }).$mount('#app')
+
+  // recursion - this function calls itself on auth state change.
+  unsubscribe()
+})
