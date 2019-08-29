@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="jumbotron bg-primary text-white">
+        <div class="jumbotron bg-primary text-white text-center">
              <h2 class="lead display-3">#SLACK EMULATOR#</h2> 
              <p>Realtime Communication</p>
         </div>
