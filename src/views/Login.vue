@@ -25,9 +25,17 @@ export default {
     name: 'login',
     methods: {
         async loginWithGoogle() {
-            await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(response => {
-                // eslint-disable-next-line no-console
-                console.log(` Google authentication response: `, response)
+            await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
+                .then(response => {
+                    // eslint-disable-next-line no-console
+                    // console.log(` Google authentication response: `, response)
+                    // dispatch setUser action
+                    this.$store.dispatch('setUser', response.user)
+
+                    //once authenticated, redirect users to chat '/'  page.
+                    this.$router.push('/')
+                    // firebase.auth().logOut()
+
             })
         }
     }
