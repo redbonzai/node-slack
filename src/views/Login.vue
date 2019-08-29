@@ -74,7 +74,8 @@ export default {
         },
 
         /**
-        *This method uses api authentication via twitter
+        * This method uses api authentication via twitter
+        * @uses firebase
         **/
         async loginWithTwitter()  {
             // loading is set to true while auth is loading
