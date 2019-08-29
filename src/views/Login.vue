@@ -20,7 +20,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col text-center">
-                    <button class="btn btn-outline-info btn-lg">Login With Twitter</button>
+                    <button @click="loginWithTwitter" class="btn btn-outline-info btn-lg">Login With Twitter</button>
                 </div>
             </div>
         </div>
@@ -56,8 +56,7 @@ export default {
 
             await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
                 .then(response => {
-                    // eslint-disable-next-line no-console
-                    // console.log(` Google authentication response: `, response)
+
                     // dispatch setUser action
                     this.$store.dispatch('setUser', response.user)
 
@@ -66,6 +65,32 @@ export default {
                     // firebase.auth().logOut()
 
             })
+                .catch(error => {
+                    this.errors.push(error.message)
+
+                    // if there is an error, then set loading = false
+                    this.loading = false
+                })
+        },
+
+        async loginWithTwitter()  {
+            // loading is set to true while auth is loading
+            this.loading = true
+
+            // clear out old errors when making a fresh request
+            this.errors = []
+
+            await firebase.auth().signInWithPopup(new firebase.auth.TwitterAuthProvider())
+                .then(response => {
+
+                    // dispatch setUser action
+                    this.$store.dispatch('setUser', response.user)
+
+                    //once authenticated, redirect users to chat '/'  page.
+                    this.$router.push('/')
+                    // firebase.auth().logOut()
+
+                })
                 .catch(error => {
                     this.errors.push(error.message)
 
