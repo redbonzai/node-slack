@@ -27,15 +27,19 @@
     </div>
 </template>
 <script>
-
+/* eslint-disable */
+import firebase from 'firebase/app'
 import auth from 'firebase/auth'
+import database from 'firebase/database'
+
 export default {
     name: 'login',
 
     data() {
         return {
             errors: [],
-            loading: false
+            loading: false,
+            usersRef: null
         }
     },
 
@@ -60,10 +64,11 @@ export default {
                     // dispatch setUser action
                     this.$store.dispatch('setUser', response.user)
 
+                    // pass user to save in firebase DB.
+                    this.saveUserToUsersRef(response.user)
+
                     //once authenticated, redirect users to chat '/'  page.
                     this.$router.push('/')
-                    // firebase.auth().logOut()
-
             })
                 .catch(error => {
                     this.errors.push(error.message)
@@ -73,10 +78,6 @@ export default {
                 })
         },
 
-        /**
-        * This method uses api authentication via twitter
-        * @uses firebase
-        **/
         async loginWithTwitter()  {
             // loading is set to true while auth is loading
             this.loading = true
@@ -90,12 +91,11 @@ export default {
                     // dispatch setUser action
                     this.$store.dispatch('setUser', response.user)
 
-                    console.log('Current Environment: ', process.env.NODE_ENV)
+                    // Save user too Firebase DB
+                    this.saveUserToUsersRef(response.user)
 
                     //once authenticated, redirect users to chat '/'  page.
                     this.$router.push('/')
-
-
 
                 })
                 .catch(error => {
@@ -104,6 +104,19 @@ export default {
                     // if there is an error, then set loading = false
                     this.loading = false
                 })
+        },
+
+        /**
+         * Save user in Firebase Database
+         */
+        saveUserToUsersRef(user) {
+            this.usersRef = firebase.database().ref('users')
+             
+            return this.usersRef.child(user.uid).set({
+                name: user.displayName,
+                avatar: user.photoURL
+            })
+             
         }
     }
 }
