@@ -1,4 +1,4 @@
-# nodeslack
+# nodeslack (WIP)
 
 ## Project setup
 ```

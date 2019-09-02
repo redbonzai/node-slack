@@ -6,7 +6,9 @@
         <div class="mt-4">
             <button type="button"
                 class="list-group-item list-group-item-action"
-                v-for="channel in channels" v-bind="channel">
+                v-for="channel in channels"                
+                :class="{'active': setActiveChannel(channel)}"
+                @click="changeChannel(channel)">
                 {{ channel.name }}
             </button>
         </div>
@@ -38,7 +40,7 @@
                     <ul class="list-grou" v-bind="hasErrors">
                         <li class="list-group-item text-danger" 
                             v-for="error in errors" 
-                            v-bind="error">
+                            v-bind:key="error">
                                 {{error}}
                         </li>
                     </ul>
@@ -58,6 +60,8 @@
 <script>
 import database from 'firebase/database'
 import $ from 'jquery'
+import {mapGetters} from 'vuex'
+
 export default {    
     
     name: 'channels',
@@ -68,8 +72,7 @@ export default {
             errors: [],
             channelsRef: firebase.database().ref('channels'),
             channels: [],
-
-            currentChannel: null 
+            channel: null 
         }
     },
 
@@ -83,6 +86,8 @@ export default {
     },
 
     computed: {
+        ...mapGetters(['currentChannel']),
+
         hasErrors() {
             return this.errors.length > 0
         }
@@ -117,6 +122,14 @@ export default {
 
         },
 
+        setActiveChannel(channel) { 
+            return channel.id === this.currentChannel.id
+        },
+
+        changeChannel(channel) {
+            this.$store.dispatch('setCurrentChannel', channel)
+        },
+
         addListeners() {
             this.channelsRef.on('child_added', snapshot => {
                 this.channels.push(snapshot.val())
@@ -125,10 +138,10 @@ export default {
                 if (this.channels.length > 0) {
 
                     // get first channel if channels array has at least one channel
-                    this.currentChannel = this.channels[0] 
+                    this.channel = this.channels[0] 
 
                     // dispatch the currentChannel store action method to save the channel in browser storage.
-                    this.$store.dispatch('setCurrentChannel', this.currentChannel)
+                    this.$store.dispatch('setCurrentChannel', this.channel)
                 }
             })
         },
