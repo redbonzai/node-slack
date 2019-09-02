@@ -67,7 +67,9 @@ export default {
             newChannel: '',
             errors: [],
             channelsRef: firebase.database().ref('channels'),
-            channels: []
+            channels: [],
+
+            currentChannel: null 
         }
     },
 
@@ -118,6 +120,16 @@ export default {
         addListeners() {
             this.channelsRef.on('child_added', snapshot => {
                 this.channels.push(snapshot.val())
+
+                // set current channel
+                if (this.channels.length > 0) {
+
+                    // get first channel if channels array has at least one channel
+                    this.currentChannel = this.channels[0] 
+
+                    // dispatch the currentChannel store action method to save the channel in browser storage.
+                    this.$store.dispatch('setCurrentChannel', this.currentChannel)
+                }
             })
         },
 

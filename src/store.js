@@ -6,7 +6,8 @@ Vue.use(Vuex)
 // create state that holds data
 const state = {
 	currentUser: null,
-	firebaseInstance: null
+	firebaseInstance: null,
+	currentChannel: null
 }
 
 // update state data through Mutations
@@ -17,6 +18,10 @@ const mutations = {
 
 	SET_FIREBASE(state, firebase) {
 		state.firebaseInstance = firebase 
+	},
+
+	SET_CURRENT_CHANNEL(state, currentChannel) {
+		state.currentChannel = currentChannel
 	}
 }
 
@@ -28,13 +33,18 @@ const actions = {
 
 	setFirebase({commit}, firebase) {
 		commit('SET_FIREBASE', firebase)
+	},
+
+	setCurrentChannel({commit}, currentChannel) {
+		commit('SET_CURRENT_CHANNEL', currentChannel)
 	}
 }
 
 // get data from state
 const getters = {
 	currentUser: state => state.currentUser,
-	firebaseInstance: state => state.firebaseInstance
+	firebaseInstance: state => state.firebaseInstance,
+	currentChannel: state => state.currentChannel
 }
 
 const store = new Vuex.Store({
