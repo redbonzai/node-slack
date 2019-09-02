@@ -6,7 +6,9 @@
                   <sidebar></sidebar>
                </div>
 
-               <div class="col-md-8 content">Content</div>
+               <div class="col-md-8 content">
+                   <messages></messages>
+               </div>
            </div>
         </div> 
     </div>
@@ -15,9 +17,10 @@
 <script>
 /* eslint-disable */
 import Sidebar from '../components/sidabar/Sidebar'
+import Messages from '../components/messages/Messages'
 export default {
     name: 'chat',
-    components: {Sidebar}
+    components: {Sidebar, Messages}
 }
 </script>
 
