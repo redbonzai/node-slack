@@ -93,7 +93,6 @@ export default {
 
                     // Save user too Firebase DB
                     this.saveUserToUsersRef(response.user)
-
                     //once authenticated, redirect users to chat '/'  page.
                     this.$router.push('/')
 
