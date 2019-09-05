@@ -5,8 +5,8 @@
             <ul class="nav flex-column">
                 <li v-for="user in users" :key="user.uid">
                     <span>
-                        <img :src="user.avatar" class="img rounded-circle" height="20">
-                        <span class="text-primary ml-2">{{ user.name }}</span>
+                        <img :src="user.avatar" class="img rounded-circle mr-2" height="20">
+                        <span :class="{'text-primary': isOnline(user), 'text-danger': !isOnline(user)}">{{ user.name }}</span>
                     </span>
                 </li>
             </ul>
@@ -49,6 +49,23 @@ export default {
                 }
             })
 
+            // presenceRef child_added: online
+            this.presenceRef.on('child_added', snapshot => {
+                if (this.currentUser.uid !== snapshot.key) {
+
+                    //pass user to status method
+                    this.addStatusToUser(snapshot.key)
+                }
+            })
+
+            //presenceRef on child_removed: offline
+            this.presenceRef.on('child_removed', snapshot => {
+                if (this.currentUser.uid !== snapshot.key) {
+                    this.addStatusToUser(snapshot.key, false)
+                }
+            })
+
+            // returns 'connected' on every user that is logged into the application
             this.connectedRef.on('value', (snapshot) => {
                 if (snapshot.val() === true) {
                     let ref = this.presenceRef.child(this.currentUser.uid)
@@ -59,9 +76,24 @@ export default {
 
         },
 
-        detachListers() {
+        addStatusToUser(userId, connected = true) {
+            let userIndex = this.users.findIndex(user => user.uid === userId)
+            if (userIndex !== -1) {
+                connected === true 
+                    ? this.users[userIndex].status = 'online' 
+                    : this.users[userIndex].status = 'offline'
+            }
+        },
 
-        }
+        isOnline(user) {
+            return user.status === 'online'
+        },
+
+        detachListers() {
+            this.usersRef.off()
+            this.presenceRef.off()
+            this.connectedRef.off()
+        }   
     },
 
     mounted() {
