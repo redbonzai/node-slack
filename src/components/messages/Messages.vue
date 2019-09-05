@@ -44,7 +44,7 @@ export default {
 
             // listen to child_added events on current channel
             this.messagesRef.child(this.currentChannel.id).on('child_added', snapshot => {
-                console.log(`messages snapshot: `, snapshot)
+                // console.log(`messages snapshot: `, snapshot)
                 this.messages.push(snapshot.val())
             })
         },
