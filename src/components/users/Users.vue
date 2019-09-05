@@ -24,7 +24,9 @@ export default {
     data() {
         return {
             users: [],
-            usersRef: firebase.database().ref('users')
+            usersRef: firebase.database().ref('users'),
+            connectedRef: firebase.database().ref('.info/connected'),
+            presenceRef: firebase.database().ref('presence')
         }
     },
 
@@ -46,6 +48,15 @@ export default {
                     this.users.push(user)
                 }
             })
+
+            this.connectedRef.on('value', (snapshot) => {
+                if (snapshot.val() === true) {
+                    let ref = this.presenceRef.child(this.currentUser.uid)
+                    ref.set(true)
+                    ref.onDisconnect().remove()
+                }
+            })
+
         },
 
         detachListers() {
