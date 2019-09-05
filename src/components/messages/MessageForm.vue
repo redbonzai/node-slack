@@ -1,8 +1,9 @@
 <template>
     <div>
-        <form class="messageForm">
+        <form class="messageForm" @keyup.enter="sendMessage">
             <div class="input-group mb-3">
-                <input v-model.trim="message"
+                <input                    
+                    v-model.trim="message"
                     type="text" 
                     class="form-control mt-3" 
                     name="message" 
