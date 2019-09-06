@@ -46,6 +46,11 @@ export default {
             this.messagesRef.child(this.currentChannel.id).on('child_added', snapshot => {
                 // console.log(`messages snapshot: `, snapshot)
                 this.messages.push(snapshot.val())
+                
+                // scroll to the top
+                this.$nextTick(() => {
+                    $('html, body').scrollTop($(document).height())
+                })
             })
         },
 
